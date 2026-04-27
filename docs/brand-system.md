@@ -274,3 +274,12 @@ Avatars/badges: 12px or Full.
 | 2026-04-28 | H4 = Harrison's Chronometer No. 4 (etymology, NOT backronym) | Preserves manifesto integrity |
 | 2026-04-28 | Three tiers (Bronze / Silver / Gold), evidence-framed copy | Aligns badges with strategic trust-tiers model |
 | 2026-04-28 | Sad manta-in-glass → 404 only | Friendly manta is the primary mascot |
+| 2026-04-28 | brand-sheet-v1.png archived to `assets/brand/` | Visual reference now committed alongside spec |
+| 2026-04-28 | Adopted Harrison chronometer illustration in H4 Story panel | Reinforces etymology beyond text — designer addition, accepted |
+| 2026-04-28 | Added positioning four-liner ("We don't fine-tune models...") to manifesto | Designer copy contribution; promoted to canonical |
+| 2026-04-28 | Light theme acceptable as primary brand surface (alongside dark) | brand-sheet-v1 ships on light; dark mode parity required for product |
+
+## Known drift from spec — to be reconciled with designer
+
+- **Trust tier copy is capability-framed** ("Works on basic tasks", "Production proven"). Spec requires evidence-framed copy ("Self-reported", "Audited", "Full eval"). Visual badges OK; only the descriptors need rewriting.
+- **Wordmark color split simplified to all-blue** in brand-sheet-v1. Spec recorded the split (`trapstreet` neutral + `.run` blue). Either update spec to all-blue or have designer restore split — pending CTO call.

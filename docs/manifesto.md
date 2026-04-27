@@ -62,6 +62,15 @@ prove they exist.
 
 ---
 
+## What we do, in four lines
+
+> *We don't fine-tune models.*
+> *We test claims.*
+> *We run real tasks.*
+> *We expose what works, what fails, and what lies.*
+
+---
+
 ## Four verbs (from the original sketch)
 
 1. **Define real tasks** — not synthetic, not gameable, not a multiple-choice quiz
