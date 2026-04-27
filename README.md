@@ -74,6 +74,7 @@ trapstreet/
 ├── README.md                              this file
 ├── docs/
 │   ├── manifesto.md                       H4 + Trap Street story
+│   ├── brand-system.md                    LOCKED brand spec v1.0
 │   ├── name-rationale.md                  Why "Trap Street" (vs Rhumb, vs Driftless)
 │   ├── trust-tiers.md                     Bronze / Silver / Gold model
 │   ├── pm-design.md                       Pages, features, the 5 weapons
@@ -83,7 +84,9 @@ trapstreet/
 ├── plans/
 │   └── v0-mvp.md                          6-week MVP plan
 └── assets/
+    ├── brand/                             brand-sheet-v1.png + lockups
     ├── mascot/                            manta ray pixel art
+    ├── error-states/                      sad manta 404, etc.
     └── reference/                         original H4 handwritten note
 ```
 
