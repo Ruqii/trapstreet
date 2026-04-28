@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand neutrals — from brand-system.md */
+  --color-bg-0: #0d1117;
+  --color-bg-1: #161b22;
+  --color-bg-2: #21262d;
+  --color-bg-3: #30363d;
+  --color-text-3: #8b949e;
+  --color-text-2: #c9d1d9;
+  --color-text-1: #f0f6fc;
+  --color-surface-light: #f6f8fa;
+
+  /* Brand blues */
+  --color-brand-700: #1f6feb;
+  --color-brand-500: #58a6ff;
+  --color-brand-300: #79c0ff;
+  --color-brand-100: #a5d6ff;
+
+  /* Semantic */
+  --color-success: #3fb950;
+  --color-error: #f85149;
+  --color-warning: #d29922;
+  --color-info: #a371f7;
+
+  /* Tier metals */
+  --color-bronze: #cd7f32;
+  --color-silver: #c0c0c0;
+  --color-gold: #ffd700;
+
+  /* Fonts */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas,
+    monospace;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-bg-0);
+    color: var(--color-text-1);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-brand-700);
+    color: var(--color-text-1);
+  }
+
+  /* Pixel-perfect rendering for the manta */
+  img.pixel,
+  .pixel img {
+    image-rendering: pixelated;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto max-w-6xl px-6;
+  }
+
+  .brick-pattern {
+    background-color: #1a1212;
+    background-image:
+      linear-gradient(335deg, #2a1818 23%, transparent 23%),
+      linear-gradient(155deg, #2a1818 23%, transparent 23%),
+      linear-gradient(335deg, #2a1818 84%, transparent 84%),
+      linear-gradient(155deg, #2a1818 84%, transparent 84%);
+    background-size: 80px 40px;
+    background-position:
+      0 0,
+      0 0,
+      40px 20px,
+      40px 20px;
+  }
+}
