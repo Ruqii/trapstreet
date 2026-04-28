@@ -69,18 +69,25 @@ mini-rankings while still giving every user a way to find their tribe.
 
 ---
 
-## Architectural consequence: v1 is no longer static
+## C. Stack — Vercel + Postgres
 
-Closed-trap cases require the platform to hold expected outputs and trap
-rules outside of the client. Static export to GitHub Pages is no longer
-sufficient.
+Locked 2026-04-29.
 
-**Hosting target for v1:** Next.js with API routes on Vercel (or
-equivalent — Cloudflare Pages + Functions, Railway, etc.). Domain
-remains `trapstreet.run`. The current `trapstreet-landing` repo can be
-upgraded in place (drop `output: "export"`, add `app/api/*`) or split
-into `trapstreet-landing` (marketing) + `trapstreet-app` (platform).
-TBD; see open questions.
+- **Runtime:** Next.js 15 with API routes (Server Functions) on **Vercel**.
+- **Datastore:** **Postgres**. Start on a managed hobby tier (Vercel
+  Postgres / Neon / Supabase — pick at provision time, all are
+  same-API). Migrate to a managed cluster if community traffic
+  justifies it.
+- **Auth:** [#1](https://github.com/AntiNoise-ai/trapstreet/issues/1).
+- **Domain:** `trapstreet.run` — unchanged.
+
+Closed-trap cases require the platform to hold expected outputs and
+trap rules outside the client, so the static-export deploy is no longer
+sufficient. The `trapstreet-landing` repo upgrades in place: drop
+`output: "export"` from `next.config.ts`, add `app/api/*`, swap GitHub
+Pages for Vercel as the deploy target. (Whether to keep this as one
+repo or split landing-vs-platform is the one open hosting question
+left — see § Open questions.)
 
 **Pre-May-29 demo does NOT need the backend.** Stage demo runs against
 a static snapshot of curated data + a Tally waitlist for "submit your
@@ -327,29 +334,24 @@ Demo runs on a frozen snapshot.
 
 ---
 
-## Open questions for next discussion
+## Open questions
 
-These didn't block the spec but block implementation. Resolve before the
-backend work starts.
+Tracked as GitHub issues — this section is a snapshot index. Authoritative
+state lives on the issues.
 
-1. **Backend stack.** Next.js API routes + Postgres on Vercel? Cloudflare
-   Pages + D1? Separate FastAPI service behind the Next.js app? Stack
-   choice drives migration shape and per-month cost.
-2. **Repo split.** Stay single repo (`trapstreet-landing` → drop static
-   export, become a full Next.js app) or split into `trapstreet-landing`
-   (marketing) + `trapstreet-app` (platform)? Single is simpler;
-   splitting lets marketing keep auto-cached static export.
-3. **GitHub OAuth vs handle-only.** Forcing GitHub login slows
-   onboarding but kills throwaway-account abuse. Anonymous handles let
-   any cheater spawn 100 accounts. Probably GitHub OAuth + per-account
-   submission cap, but worth confirming.
-4. **Skill distribution.** Stay as the existing `trapstreet-eval` skill
-   bundled in the user's Claude install? Ship as `npx trapstreet eval`?
-   Both? The skill route is faster to iterate on; npx route is more
-   discoverable for non-Claude-Code users.
-5. **Pricing kick-in.** When does Silver ($99–499/yr per
-   [`trust-tiers.md`](trust-tiers.md)) start charging? Free through 5/29
-   is obvious; what about month-2?
+| # | Question | Status |
+|---|---|---|
+| ~~1~~ | ~~Backend stack~~ | **Locked: Vercel + Postgres** (see § C above) |
+| 2 | Repo split: single full-stack Next.js vs separate `trapstreet-landing` (marketing) + `trapstreet-app` (platform) | open — under discussion |
+| 3 | [GitHub OAuth vs handle-only auth](https://github.com/AntiNoise-ai/trapstreet/issues/1) | open |
+| 4 | [Skill distribution: trapstreet-eval skill vs `npx trapstreet`](https://github.com/AntiNoise-ai/trapstreet/issues/2) | open |
+| 5 | [Silver tier pricing kick-in date](https://github.com/AntiNoise-ai/trapstreet/issues/3) | open |
+
+Roadmap of v1.1+ deferred features tracked at
+[#4](https://github.com/AntiNoise-ai/trapstreet/issues/4).
+Implementation work tracked at
+[#5](https://github.com/AntiNoise-ai/trapstreet/issues/5)
+(skill `--submit` stub).
 
 ---
 
