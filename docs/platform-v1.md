@@ -83,15 +83,112 @@ Locked 2026-04-29.
 
 Closed-trap cases require the platform to hold expected outputs and
 trap rules outside the client, so the static-export deploy is no longer
-sufficient. The `trapstreet-landing` repo upgrades in place: drop
-`output: "export"` from `next.config.ts`, add `app/api/*`, swap GitHub
-Pages for Vercel as the deploy target. (Whether to keep this as one
-repo or split landing-vs-platform is the one open hosting question
-left — see § Open questions.)
+sufficient.
 
-**Pre-May-29 demo does NOT need the backend.** Stage demo runs against
+**Single repo, full-stack Next.js. Locked 2026-04-29.**
+
+The `trapstreet-landing` repo upgrades in place — no split into
+`landing` + `app`. Reasoning: Next.js 15 already serves both static and
+dynamic from one app via per-route config (`export const dynamic =
+'force-static' | 'force-dynamic'`); splitting buys us nothing real at
+1–3 person team scale and costs us a third shared-component package
+plus duplicated CI / secrets / cookie domains. Revisit only if marketing
+and platform deploy cadences materially diverge.
+
+Migration steps (post-May-29):
+
+1. Drop `output: "export"` and `trailingSlash` from `next.config.ts`
+2. Add `app/api/*` route handlers
+3. Per-route static where it should be static (`/`, `/manifesto`,
+   `/wall`, `/playground`) — `export const dynamic = 'force-static'`
+4. Connect Postgres via `@vercel/postgres` or equivalent
+5. Switch the deploy target from GitHub Pages to Vercel; CNAME flips
+   to Vercel's edge
+
+**Pre-May-29 demo does NOT need any of this.** Stage demo runs against
 a static snapshot of curated data + a Tally waitlist for "submit your
 tool". v1 backend ships post-stage.
+
+---
+
+## Runtime-agnostic submission paths
+
+Trap Street is a leaderboard across runtimes — Claude Code, ChatGPT,
+Qwen, Gemini, custom agent stacks, anything that produces text. The
+case spec, grader code, and scoring formula are deliberately
+runtime-agnostic: a case says *"given input X, expected output shape
+Y, scoring rules Z."* It does not care who produced the output. The
+platform just needs each runtime to have a way to drop its output into
+the scoring pipeline.
+
+Three submission paths cover the runtime matrix. All three POST to the
+same `/api/submission` (open) or `/api/case/{id}/run` (closed), all
+three run through the same grader code in
+[`src/lib/eval/`](../../trapstreet-landing/src/lib/eval/). They differ
+in **what metadata can be trusted**, not in what gets scored.
+
+### Path 1 — Claude Code skill (`trapstreet-eval`)
+
+Audience: Claude Code users.
+Captures: model id, harness version, installed skills / MCPs, OS,
+real token usage, real latency from the Claude session.
+Trust signal: skill is signed by the user's account; usage stats come
+from the runtime, not user input.
+
+### Path 2 — Generic CLI (`npx trapstreet eval`)
+
+Audience: anyone using OpenAI / Anthropic / DashScope (Qwen) / Google
+AI Studio / OpenRouter / etc. via API.
+
+```bash
+npx trapstreet eval --provider openai --model gpt-4o --case T-0047
+```
+
+CLI prompts for the provider API key (env var), runs the case, captures
+real usage from the API response, scores locally for open cases or via
+`/api/case/{id}/run` for closed cases.
+
+Trust signal: the API receipt is hard to forge — user can lie about the
+provider/model id but the response usage and latency are honest.
+
+### Path 3 — Web paste (`trapstreet.run/run/[case_id]`)
+
+Audience: anyone with a browser. Reaches the populations Path 1 and 2
+miss — ChatGPT free tier, Qwen web, Gemini web, claude.ai web,
+LMArena-style nontechnical users.
+
+Flow: page shows the prompt with a "copy" button → user pastes into
+their AI of choice → user pastes the output back → grader runs in
+browser (open case) or server-side (closed). Claimed metadata
+(model dropdown) gets stamped "claimed"; cost / latency columns show
+in-browser tokenizer estimates in italic.
+
+Trust signal: weakest of the three. Metadata is user-stated; only the
+grader verdict is verifiable. Leaderboard rows from this path render
+with a small "paste-mode" chip so buyers can filter them out under
+"verified only".
+
+### Future paths
+
+- **Browser extension** (v1.1, [#4](https://github.com/AntiNoise-ai/trapstreet/issues/4))
+  — one-click capture from chatgpt.com / qwen.com / claude.ai, reads
+  real model name from the DOM, more reliable than paste.
+- **Platform-hosted Gold runs** — the platform itself calls the
+  provider API with the submitter's credentials. Reserved for top 20
+  per case + paid tier per [`trust-tiers.md`](trust-tiers.md).
+
+### Leaderboard filter chips
+
+```
+all submissions
+  ├─ skill-signed   (Path 1)
+  ├─ API-signed     (Path 2)
+  ├─ paste-mode     (Path 3 — claimed metadata)
+  └─ hosted (Gold)  (future)
+```
+
+Default view shows everything with row-level visual differentiation.
+"Verified runs only" filter excludes paste-mode.
 
 ---
 
@@ -127,19 +224,30 @@ trap-street probes inside otherwise normal-looking inputs.
 ### `submission`
 
 ```
-submission_id    uuid pk
-case_id          fk → case.case_id
-submitter_id     fk → user.user_id
-tool_id          fk → tool.tool_id           -- which workflow / tool was tested
-tool_output      text
-metadata         jsonb                       -- model, harness, skills, OS, region
-report           jsonb                       -- runEval() output, grader-by-grader
-score            float                       -- composite from §B
-trust_tier       enum('bronze','silver','gold')
-verified_at      timestamptz null
-verifier_id      fk null → user.user_id
-created_at       timestamptz
+submission_id        uuid pk
+case_id              fk → case.case_id
+submitter_id         fk → user.user_id
+tool_id              fk → tool.tool_id           -- which workflow / tool was tested
+tool_output          text
+submission_source    enum('skill','cli','paste','hosted')  -- which Path produced this run
+model_snapshot_date  date                        -- the day the run was made; freezes
+                                                 -- this row's interpretation against
+                                                 -- silent provider model upgrades
+metadata             jsonb                       -- model, harness, skills, OS, region
+report               jsonb                       -- runEval() output, grader-by-grader
+score                float                       -- composite from §B
+trust_tier           enum('bronze','silver','gold')
+verified_at          timestamptz null
+verifier_id          fk null → user.user_id
+created_at           timestamptz
 ```
+
+`submission_source` is first-class (own column, not buried in metadata)
+so leaderboard filters on it run efficiently. `model_snapshot_date` is
+the contract that protects historical scores when "gpt-4o" or
+"claude-opus-4-7" silently shifts under us — the row says "this score
+was produced on this date against the model named X as it existed
+that day."
 
 ### `user`, `tool`, `comment`, `vote`
 
@@ -342,10 +450,12 @@ state lives on the issues.
 | # | Question | Status |
 |---|---|---|
 | ~~1~~ | ~~Backend stack~~ | **Locked: Vercel + Postgres** (see § C above) |
-| 2 | Repo split: single full-stack Next.js vs separate `trapstreet-landing` (marketing) + `trapstreet-app` (platform) | open — under discussion |
+| ~~2~~ | ~~Repo split~~ | **Locked: single full-stack Next.js, no split** (see § C above) |
 | 3 | [GitHub OAuth vs handle-only auth](https://github.com/AntiNoise-ai/trapstreet/issues/1) | open |
 | 4 | [Skill distribution: trapstreet-eval skill vs `npx trapstreet`](https://github.com/AntiNoise-ai/trapstreet/issues/2) | open |
 | 5 | [Silver tier pricing kick-in date](https://github.com/AntiNoise-ai/trapstreet/issues/3) | open |
+| 6 | [Tool taxonomy — what is one "tool"](https://github.com/AntiNoise-ai/trapstreet/issues/6) | open |
+| 7 | [Case versioning policy](https://github.com/AntiNoise-ai/trapstreet/issues/7) | open |
 
 Roadmap of v1.1+ deferred features tracked at
 [#4](https://github.com/AntiNoise-ai/trapstreet/issues/4).
