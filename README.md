@@ -107,4 +107,11 @@ Domain registered: **trapstreet.run**
 Brand locked: **Trap Street**
 Architecture: tiered trust model (Bronze / Silver / Gold)
 Stack: Pydantic Evals + Langfuse + custom submission/runner/leaderboard
-MVP plan: see [`plans/v0-mvp.md`](plans/v0-mvp.md)
+
+**Phase 1 mission:** support CEO Ruqi as a speaker at the Claude Code London
+Event on **May 29, 2026.** All work between now and the show date is
+subordinate to the live demo on stage.
+
+- Active demo plan: [`plans/demo-may29.md`](plans/demo-may29.md)
+- Immediate 48h deliverable (speaker prep call 30 Apr): [`plans/speaker-prep-apr30.md`](plans/speaker-prep-apr30.md)
+- Original V0 plan (deprecated, kept for reference): [`plans/v0-mvp.md`](plans/v0-mvp.md)

@@ -1,5 +1,16 @@
 # V0 MVP Plan — 6 weeks, 2–3 people
 
+> ⚠️ **DEPRECATED 2026-04-28.** This plan is preserved for reference but is
+> no longer the active phase-1 plan. The project is now optimizing for
+> Ruqi's on-stage demo at the Claude Code London Event (May 29, 2026).
+> See [`demo-may29.md`](demo-may29.md) for the active plan and
+> [`speaker-prep-apr30.md`](speaker-prep-apr30.md) for the immediate
+> 48-hour deliverable for the speaker prep call.
+>
+> The Resume Tailoring track and the headline target below are still the
+> right product bet — the change is the *delivery moment*, which moves
+> from "Twitter launch" to "London stage."
+
 **Goal:** ship one viral moment around the **Resume Tailoring** track.
 **Headline target:** *"We tested 8 resume AI tools. 4 fabricated work history.
 The #1 tool wasn't the $29/month one."*
