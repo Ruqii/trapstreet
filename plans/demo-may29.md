@@ -37,8 +37,9 @@ clicks to the live `trapstreet.run` site. Audience sees a leaderboard with
 familiar tool names ranked, with Bronze / Silver / Gold tier badges. She
 clicks into the Trap Street Wall and shows three specific fabrications —
 each with the original résumé, the AI's output, and a red CAUGHT stamp.
-She closes: *"This is the H4 for AI workflows. We're open source. The
-GitHub repo is in your conference pack."*
+She closes: *"This is the H4 for AI workflows. trapstreet.run is live
+today, the landing source is at github.com/AntiNoise-ai/trapstreet-landing,
+and the full community harness drops the day of this talk."*
 
 **Total runtime:** 5–8 minutes. **One headline number** the audience will
 quote afterward.

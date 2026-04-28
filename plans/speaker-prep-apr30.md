@@ -133,10 +133,11 @@ that matter:
 
 ### Q: "When can people use this?"
 
-> *"The community edition launches with this talk on May 29. The OSS
-> harness, the public task pool, and the leaderboard all go live the day
-> of the talk. The repo is at github.com/AntiNoise-ai/trapstreet — it's
-> already public."*
+> *"You can use trapstreet.run today — the leaderboard prototype is
+> already live, and the source for the site is open at
+> github.com/AntiNoise-ai/trapstreet-landing. The full community
+> edition — OSS harness, the public task pool, real submission API —
+> launches with this talk on May 29 from the same org."*
 
 ---
 
@@ -212,17 +213,18 @@ A short email to the organizer with three attachments:
 
 A package she can mention on the call:
 
-- ✅ GitHub repo: `github.com/AntiNoise-ai/trapstreet` (currently private,
-   **flip to public by 29 Apr afternoon** so it's screenshareable)
+- ✅ Public GitHub repo (screenshareable on the call):
+   **`github.com/AntiNoise-ai/trapstreet-landing`** — Apache-2.0,
+   Next.js source for the live site
+- ✅ Live homepage at **`https://trapstreet.run`** — full prototype
+   with leaderboard, how-it-works, Trap Street Wall, manta-ray mascot,
+   HTTPS-enforced. No more 404 risk on the call.
+- ✅ Internal product/working repo (`AntiNoise-ai/trapstreet`) stays
+   private through May 29. The "OSS launch" is a beat tied to the
+   talk, not a state we already advertise.
 - ✅ Manifesto: `docs/manifesto.md`
 - ✅ Brand sheet: `assets/brand/brand-sheet-v1.png`
 - ⏳ Demo concept doc: this file + `demo-may29.md`
-- ⏳ Working `trapstreet.run` placeholder page (just brand + "launching
-   May 29" — 1 hour of work)
-
-The placeholder page is important: when she gives them the URL on the
-call, it shouldn't 404. A simple branded splash with countdown to May 29
-is enough.
 
 ---
 
