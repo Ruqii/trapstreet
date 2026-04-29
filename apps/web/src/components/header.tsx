@@ -2,10 +2,8 @@ import Link from "next/link";
 import { Manta } from "./manta";
 
 const navItems = [
-  { href: "/how-it-works", label: "How it works" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/wall", label: "Wall" },
-  { href: "/manifesto", label: "Manifesto" },
+  { href: "/explore", label: "Explore Tasks" },
 ];
 
 export function Header() {
@@ -18,14 +16,9 @@ export function Header() {
           aria-label="Trap Street home"
         >
           <Manta size={32} />
-          <div className="leading-tight">
-            <div className="font-bold tracking-tight">
-              <span className="text-[var(--color-text-1)]">trapstreet</span>
-              <span className="text-[var(--color-brand-500)]">.run</span>
-            </div>
-            <div className="text-[10px] uppercase tracking-wider text-[var(--color-text-3)] -mt-0.5">
-              H4 for AI workflows
-            </div>
+          <div className="font-bold tracking-tight text-xl md:text-2xl leading-none">
+            <span className="text-[var(--color-text-1)]">trapstreet</span>
+            <span className="text-[var(--color-brand-500)]">.run</span>
           </div>
         </Link>
         <nav className="flex items-center gap-1 text-sm">
@@ -38,14 +31,12 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <a
-            href="https://github.com/AntiNoise-ai/trapstreet"
-            target="_blank"
-            rel="noreferrer"
-            className="ml-2 px-3 py-1.5 rounded-md border border-[var(--color-bg-3)] hover:border-[var(--color-brand-500)] text-[var(--color-text-2)] hover:text-[var(--color-text-1)] transition-colors"
+          <Link
+            href="/submit"
+            className="ml-2 px-4 py-2 rounded-md bg-[var(--color-brand-700)] hover:bg-[var(--color-brand-500)] text-white font-medium transition-colors"
           >
-            GitHub
-          </a>
+            Submit Task
+          </Link>
         </nav>
       </div>
     </header>

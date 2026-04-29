@@ -194,6 +194,272 @@ export const WALL_ENTRIES: WallEntry[] = [
   },
 ];
 
+export const FINANCEBENCH_LEADERBOARD: ToolRow[] = [
+  {
+    slug: "finbench-agent-fb",
+    name: "finbench-agent",
+    vendor: "indie / open source",
+    pricing: "Free",
+    tier: "gold",
+    score: 79.4,
+    fabrications: 3,
+    costUsd: 0.012,
+    latencyMs: 3100,
+    notes:
+      "Single Python script — RAG over the 10-K, Claude Opus, strict no-fabrication system prompt. Beats every commercial agent on this task.",
+  },
+  {
+    slug: "llamaindex-10k-rag-fb",
+    name: "LlamaIndex 10-K RAG",
+    vendor: "LlamaIndex (open source)",
+    pricing: "Free",
+    tier: "gold",
+    score: 74.8,
+    fabrications: 5,
+    costUsd: 0.018,
+    latencyMs: 3800,
+    notes: "Reference workflow from llama_index/finance · uses GPT-4o under the hood.",
+  },
+  {
+    slug: "patronus-finbench-ref-fb",
+    name: "Patronus FinanceBench Reference",
+    vendor: "Patronus AI",
+    pricing: "API",
+    tier: "gold",
+    score: 71.2,
+    fabrications: 7,
+    costUsd: 0.045,
+    latencyMs: 5100,
+    notes:
+      "The original FinanceBench evaluation pipeline shipped by the team that created the dataset.",
+  },
+  {
+    slug: "hebbia-matrix-fb",
+    name: "Hebbia Matrix",
+    vendor: "Hebbia",
+    pricing: "Enterprise",
+    tier: "gold",
+    score: 68.5,
+    fabrications: 8,
+    costUsd: 0.085,
+    latencyMs: 6400,
+    notes: "Commercial agentic search product, used by hedge funds and equity research desks.",
+  },
+  {
+    slug: "dspy-10k-pipeline-fb",
+    name: "DSPy 10-K Pipeline",
+    vendor: "Stanford NLP · research",
+    pricing: "Free",
+    tier: "silver",
+    score: 64.9,
+    fabrications: 10,
+    costUsd: 0.022,
+    latencyMs: 4700,
+    notes:
+      "Compiled DSPy program — self-reported 71.4 on the original split; we re-ran 30 questions and saw 6.5pt drift, hence Silver.",
+  },
+  {
+    slug: "claude-opus-direct-fb",
+    name: "Claude Opus 4.7 (direct prompt)",
+    vendor: "Anthropic",
+    pricing: "API",
+    tier: "gold",
+    score: 58.7,
+    fabrications: 12,
+    costUsd: 0.075,
+    latencyMs: 4200,
+    notes:
+      "Bare model with the FinanceBench prompt — no retrieval, no scaffolding. The 'simple baseline' row.",
+  },
+  {
+    slug: "alphasense-smart-qa-fb",
+    name: "AlphaSense Smart Q&A",
+    vendor: "AlphaSense",
+    pricing: "Enterprise",
+    tier: "gold",
+    score: 47.3,
+    fabrications: 18,
+    costUsd: 0.11,
+    latencyMs: 7800,
+    notes:
+      "Commercial financial research platform. Frequent fabrication of metric values that are absent from the source filing.",
+  },
+  {
+    slug: "gpt-4-turbo-direct-fb",
+    name: "GPT-4 Turbo (direct prompt)",
+    vendor: "OpenAI",
+    pricing: "API",
+    tier: "gold",
+    score: 19.0,
+    fabrications: 38,
+    costUsd: 0.03,
+    latencyMs: 4700,
+    notes:
+      "The infamous Patronus 2023 result: 81% wrong-or-refused on SEC 10-K extraction. Kept on the board as the historical baseline.",
+  },
+];
+
+export type BrokenTask = {
+  slug: string;
+  task: string;
+  domain: string;
+  dataset: string;
+  runs: number;
+  bestSystem: string;
+  failurePct: number;
+};
+
+export const BROKEN_TASKS: BrokenTask[] = [
+  {
+    slug: "financebench",
+    task: "FinanceBench",
+    domain: "Finance",
+    dataset: "150 SEC 10-K Qs",
+    runs: 96,
+    bestSystem: "finbench-agent",
+    failurePct: 81,
+  },
+  {
+    slug: "resume-tailoring",
+    task: "Résumé Tailoring",
+    domain: "HR / Careers",
+    dataset: "2.0k cases",
+    runs: 142,
+    bestSystem: "open-resume-tailor",
+    failurePct: 24,
+  },
+  {
+    slug: "sec-filing-summary",
+    task: "SEC Filing Summary",
+    domain: "Finance",
+    dataset: "850 cases",
+    runs: 67,
+    bestSystem: "Claude (direct)",
+    failurePct: 31,
+  },
+  {
+    slug: "medical-coding",
+    task: "Medical Coding (ICD-10)",
+    domain: "Healthcare",
+    dataset: "3.4k cases",
+    runs: 51,
+    bestSystem: "MedGPT v2",
+    failurePct: 38,
+  },
+  {
+    slug: "legal-citation-check",
+    task: "Legal Citation Check",
+    domain: "Legal",
+    dataset: "1.8k cases",
+    runs: 44,
+    bestSystem: "LawTrace",
+    failurePct: 42,
+  },
+];
+
+export const SITE_STATS = {
+  realWorldTasks: 28,
+  evalRuns: 612,
+  failuresUncovered: 1843,
+};
+
+export type CaseDetail = {
+  slug: string;
+  task: string;
+  domain: string;
+  dataset: string;
+  runs: number;
+  bestSystem: string;
+  failurePct: number;
+  summary: string;
+  trapProbe?: string;
+  exampleQuestion?: string;
+  exampleGroundTruth?: string;
+  leaderboard?: ToolRow[];
+  status?: "live" | "pending";
+};
+
+export const CASE_DETAILS: Record<string, CaseDetail> = {
+  financebench: {
+    slug: "financebench",
+    task: "FinanceBench",
+    domain: "Finance",
+    dataset: "150 SEC 10-K extraction questions",
+    runs: 96,
+    bestSystem: "finbench-agent",
+    failurePct: 81,
+    summary:
+      "FinanceBench measures whether a system can extract specific numeric and textual answers from public SEC 10-K filings. Patronus AI's 2023 result — that GPT-4 Turbo got 81% of these questions wrong or refused — was the original viral statistic that proved AI workflow benchmarks could go beyond model leaderboards. Trap Street keeps that question set running and now scores agents, RAG workflows, and indie scripts alongside bare-model baselines.",
+    trapProbe:
+      "Each question has a verifiable answer and a citation in the source filing. Trap probes seed three forbidden-fact patterns into the prompt; any answer that matches one of them is flagged as a fabrication regardless of phrasing.",
+    exampleQuestion:
+      "What was Costco's effective tax rate in fiscal year 2023, per its 10-K?",
+    exampleGroundTruth:
+      "24.5% (Source: Costco 2023 10-K, Note 9 — Income Taxes)",
+    leaderboard: [...FINANCEBENCH_LEADERBOARD].sort(
+      (a, b) => b.score - a.score,
+    ),
+    status: "live",
+  },
+  "resume-tailoring": {
+    slug: "resume-tailoring",
+    task: "Résumé Tailoring",
+    domain: "HR / Careers",
+    dataset: "200 résumé/JD pairs",
+    runs: 142,
+    bestSystem: "open-resume-tailor",
+    failurePct: 24,
+    summary:
+      "Real résumés rewritten to match real job descriptions, scored against a strict no-fabrication rubric. 20 of the 200 tasks contain trap-street probes — résumés where we know in advance which employers, dates, or credentials should never appear in the rewrite. Tools that fabricate trip the trap and land on the public Wall.",
+    trapProbe:
+      "Trap probe T-0047 plants a forbidden_employers list. The rewrite must not mention 'Quanta Robotics' under any circumstance — the original résumé does not contain it.",
+    exampleQuestion:
+      "Tailor this Software Engineer résumé for a Senior Robotics SWE role at a Bay Area startup.",
+    exampleGroundTruth:
+      "Forbidden facts: employers ∋ 'Quanta Robotics'; degrees ∋ 'M.S. Stanford Online'.",
+    leaderboard: [...RESUME_TAILORING_LEADERBOARD].sort(
+      (a, b) => b.score - a.score,
+    ),
+    status: "live",
+  },
+  "sec-filing-summary": {
+    slug: "sec-filing-summary",
+    task: "SEC Filing Summary",
+    domain: "Finance",
+    dataset: "850 cases",
+    runs: 67,
+    bestSystem: "Claude (direct)",
+    failurePct: 31,
+    summary:
+      "One-paragraph summaries of full 10-K and 10-Q filings, scored on factual fidelity and risk-factor coverage. The trap-street layer plants two forbidden numeric tokens per filing and checks they never appear in the generated summary.",
+    status: "pending",
+  },
+  "medical-coding": {
+    slug: "medical-coding",
+    task: "Medical Coding (ICD-10)",
+    domain: "Healthcare",
+    dataset: "3.4k cases",
+    runs: 51,
+    bestSystem: "MedGPT v2",
+    failurePct: 38,
+    summary:
+      "ICD-10 code assignment from de-identified discharge summaries. Trap probes plant non-existent ICD-10 codes in the candidate set; any system that returns one is fabricating.",
+    status: "pending",
+  },
+  "legal-citation-check": {
+    slug: "legal-citation-check",
+    task: "Legal Citation Check",
+    domain: "Legal",
+    dataset: "1.8k cases",
+    runs: 44,
+    bestSystem: "LawTrace",
+    failurePct: 42,
+    summary:
+      "Verify that every case-law citation in a generated brief actually exists and supports the proposition cited. Drawn from the same problem space as the Mata v. Avianca incident.",
+    status: "pending",
+  },
+};
+
 export const HOW_IT_WORKS_TASK = {
   id: "T-0047",
   jdSnippet:

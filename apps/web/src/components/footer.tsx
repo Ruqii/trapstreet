@@ -73,9 +73,18 @@ export function Footer() {
           >
             Manifesto
           </Link>
-          <a href="#" className="block text-[var(--color-text-2)] hover:text-[var(--color-text-1)]">
-            Submit a tool
-          </a>
+          <Link
+            href="/submit"
+            className="block text-[var(--color-text-2)] hover:text-[var(--color-text-1)]"
+          >
+            Submit a task
+          </Link>
+          <Link
+            href="/explore"
+            className="block text-[var(--color-text-2)] hover:text-[var(--color-text-1)]"
+          >
+            Explore tasks
+          </Link>
         </div>
       </div>
       <div className="container-x pb-10 pt-6 border-t border-[var(--color-bg-3)] flex justify-between items-center text-xs text-[var(--color-text-3)]">
