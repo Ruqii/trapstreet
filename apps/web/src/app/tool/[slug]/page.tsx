@@ -52,7 +52,7 @@ export default async function ToolPage({
               {tool.name}
             </h1>
             <div className="mt-2 text-[var(--color-text-3)]">
-              {tool.vendor} · {tool.pricing}
+              {tool.vendor} · {tool.patch}
             </div>
             {tool.notes && (
               <p className="mt-4 text-[var(--color-text-2)] max-w-2xl leading-relaxed">
@@ -84,9 +84,13 @@ export default async function ToolPage({
 
       <section className="container-x py-10 grid md:grid-cols-4 gap-4">
         <Stat label="Fabrications" value={String(tool.fabrications)} tone="error" />
-        <Stat label="$/task" value={`$${tool.costUsd.toFixed(3)}`} />
+        <Stat
+          label="$/task"
+          value={`$${tool.costUsd.toFixed(3)}`}
+          sublabel={tool.selfReported ? "self-reported" : undefined}
+        />
         <Stat label="Latency" value={`${(tool.latencyMs / 1000).toFixed(1)}s`} />
-        <Stat label="Pricing" value={tool.pricing} muted />
+        <Stat label="Patch" value={tool.patch} muted />
       </section>
 
       {wallEntries.length > 0 && (
@@ -153,11 +157,13 @@ export default async function ToolPage({
 function Stat({
   label,
   value,
+  sublabel,
   tone,
   muted,
 }: {
   label: string;
   value: string;
+  sublabel?: string;
   tone?: "error";
   muted?: boolean;
 }) {
@@ -179,6 +185,11 @@ function Stat({
       >
         {value}
       </div>
+      {sublabel && (
+        <div className="text-xs text-[var(--color-text-3)] mt-1">
+          {sublabel}
+        </div>
+      )}
     </div>
   );
 }

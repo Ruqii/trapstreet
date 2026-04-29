@@ -49,7 +49,7 @@ export default function LeaderboardPage() {
                 <Th className="text-right">Fabrications</Th>
                 <Th className="text-right">$/task</Th>
                 <Th className="text-right">Latency</Th>
-                <Th>Pricing</Th>
+                <Th>Patch</Th>
               </tr>
             </thead>
             <tbody>
@@ -99,11 +99,16 @@ export default function LeaderboardPage() {
                   </Td>
                   <Td className="text-right font-mono tabular-nums text-[var(--color-text-2)]">
                     ${tool.costUsd.toFixed(3)}
+                    {tool.selfReported && (
+                      <div className="text-xs font-sans text-[var(--color-text-3)] mt-0.5">
+                        self-reported
+                      </div>
+                    )}
                   </Td>
                   <Td className="text-right font-mono tabular-nums text-[var(--color-text-2)]">
                     {(tool.latencyMs / 1000).toFixed(1)}s
                   </Td>
-                  <Td className="text-[var(--color-text-3)]">{tool.pricing}</Td>
+                  <Td className="text-[var(--color-text-3)]">{tool.patch}</Td>
                 </tr>
               ))}
             </tbody>

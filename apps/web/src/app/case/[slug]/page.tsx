@@ -201,7 +201,7 @@ function CaseLeaderboard({ rows }: { rows: CaseDetail["leaderboard"] }) {
               <th className="px-5 py-4 font-medium text-right">Fabrications</th>
               <th className="px-5 py-4 font-medium text-right">$/task</th>
               <th className="px-5 py-4 font-medium text-right">Latency</th>
-              <th className="px-5 py-4 font-medium">Pricing</th>
+              <th className="px-5 py-4 font-medium">Patch</th>
             </tr>
           </thead>
           <tbody>
@@ -246,12 +246,17 @@ function CaseLeaderboard({ rows }: { rows: CaseDetail["leaderboard"] }) {
                 </td>
                 <td className="px-5 py-4 text-right font-mono tabular-nums text-[var(--color-text-2)]">
                   ${tool.costUsd.toFixed(3)}
+                  {tool.selfReported && (
+                    <div className="text-xs font-sans text-[var(--color-text-3)] mt-0.5">
+                      self-reported
+                    </div>
+                  )}
                 </td>
                 <td className="px-5 py-4 text-right font-mono tabular-nums text-[var(--color-text-2)]">
                   {(tool.latencyMs / 1000).toFixed(1)}s
                 </td>
                 <td className="px-5 py-4 text-[var(--color-text-3)]">
-                  {tool.pricing}
+                  {tool.patch}
                 </td>
               </tr>
             ))}
